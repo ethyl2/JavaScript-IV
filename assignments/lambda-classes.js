@@ -70,6 +70,9 @@ Instructor
   * `grade` receives a `student` object and a `subject` string as 
   * arguments and logs out '{student.name} receives a perfect score on {subject}'
   * 
+  * Stretch: build out a method on the Instructor (this will be used by _BOTH_ instructors 
+  * and PM's) that will randomly add or subtract points to a student's grade. 
+  * _Math.random_ will help.
 */
 
 class Instructor extends Person {
@@ -84,6 +87,19 @@ class Instructor extends Person {
     }
     grade = function(student, subject) {
         console.log(`${student.name} receives a perfect score on ${subject}`)
+    }
+    mark = function(student) {
+        let randomPoints = Math.floor(Math.random() * 11); 
+        let coinFlip = Math.floor(Math.random() * 2) == 0 ? 'heads' : 'tails';
+        if (coinFlip === 'heads') {
+            student.grade += randomPoints;
+            console.log(`${this.name} added ${randomPoints} to ${student.name}'s grade,` +
+            ` bringing the grade up to ${student.grade}`);
+        } else {
+            student.grade -= randomPoints;
+            console.log(`${this.name} took off ${randomPoints} to ${student.name}'s` +
+             `grade, decreasing the grade to ${student.grade}`);
+        }
     }
 }
 
@@ -126,6 +142,15 @@ festiveFrancis.demo('vanilla CSS');
 * that the `student.name has submitted a PR for {subject}`
 * `sprintChallenge` similar to PRAssignment but logs out `student.name has begun 
 * sprint challenge on {subject}`
+
+    Stretch:  Extend the functionality of the Student by adding a prop called grade 
+    and setting it equal to a number between 1-100.
+
+    Stretch: Add a graduate method to a student.
+  * This method, when called, will check the grade of the student and see if they're 
+  ready to graduate from Lambda School
+  * If the student's grade is above a 70% let them graduate! 
+  Otherwise go back to grading their assignments to increase their score.
 */
 
 class Student extends Person {
@@ -134,6 +159,7 @@ class Student extends Person {
         this.previousBackground = studentAttrs.previousBackground;
         this.className = studentAttrs.className;
         this.favSubjects = studentAttrs.favSubjects;
+        this.grade = studentAttrs.grade;
     }
     listsSubjects = function() {
         this.favSubjects.forEach(function(subject) {
@@ -146,6 +172,13 @@ class Student extends Person {
     sprintChallenge = function(subject) {
         console.log(`${this.name} has begun sprint challenge on ${subject}`);
     }
+    graduate = function(facultyMember) {
+        while (this.grade < 70) {
+            facultyMember.mark(this);
+        }
+        console.log(`${this.name} graduates from Lambda School` +
+        ` with a grade of ${this.grade}`);
+    }
 }
 
 const grumpyGwen = new Student({
@@ -154,11 +187,13 @@ const grumpyGwen = new Student({
     location: 'Georgia',
     previousBackground: 'HS grad',
     className: 'WEB25',
-    favSubjects: ['HTML', 'CSS', 'JavaScript']
+    favSubjects: ['HTML', 'CSS', 'JavaScript'],
+    grade: 69
 });
 
 festiveFrancis.grade(grumpyGwen, 'Fun Bus Landing Page');
 grumpyGwen.sprintChallenge('JavaScript');
+grumpyGwen.graduate(festiveFrancis);
 
 const hungryHolly = new Student({
     name: 'Holly Hawkins',
@@ -166,10 +201,13 @@ const hungryHolly = new Student({
     location: 'Hawaii',
     previousBackground: 'Hospital Administrator',
     className: 'WEB24',
-    favSubjects: ['node.js', 'jQuery', 'JS closures']
+    favSubjects: ['node.js', 'jQuery', 'JS closures'],
+    grade: 80
 });
 
 hungryHolly.listsSubjects();
+spoiledStan.mark(hungryHolly);
+spoiledStan.mark(grumpyGwen);
 
   /*Project Manager
 
